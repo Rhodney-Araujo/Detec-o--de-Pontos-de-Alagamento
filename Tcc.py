@@ -122,36 +122,36 @@ while True:
             if positivos > negativos:
                 inserir_dados(supabase)
                 positividade = True
-                print("Maioria positiva nas primeiras 55 leituras. Inserindo no banco e aguardando 1 minuto.")
+                print("Maioria positiva nas primeiras 55 leituras. Inserindo no banco e aguardando 10 minutos.")
                 valores_sensor = []
                 arduino.close()
                 time.sleep(600) #10 minutos
                 arduino = serial.Serial(port = arduino_port, baudrate = 9600)
 
             else:
-                print("Maioria negativa nas primeiras 54 leituras. Reiniciando...")
+                print("Maioria negativa nas primeiras 55 leituras. Reiniciando...")
                 valores_sensor = []
                 arduino.close()
                 time.sleep(600) #10 minutos
                 arduino = serial.Serial(port = arduino_port, baudrate = 9600)
 
-        # Após a pausa, fazer 55 leituras e continuar o fluxo
-        if positividade and len(valores_sensor) >= 55:
+        # Após a pausa, fazer 51 leituras e continuar o fluxo
+        if positividade and len(valores_sensor) >= 51:
             positivos = valores_sensor.count(1)
             negativos = valores_sensor.count(0)
 
             if positivos > negativos:
                 dados_persistentes_true(supabase)
                 notificacao(supabase)
-                print("Maioria positiva nas 55 leituras. Alagamento persistente.")
+                print("Maioria positiva nas 51 leituras. Alagamento persistente.")
             else:
                 dados_persistentes_false(supabase)
-                print("Maioria negativa nas 55 leituras. Marcando como alagamento não persistente.")
+                print("Maioria negativa nas 51 leituras. Marcando como alagamento não persistente.")
                 positividade = False  # Resetar para começar uma nova rodada
 
             valores_sensor = []
             arduino.close()
-            time.sleep(600) # Esperar 10 minutos (600 no time.sleep) antes de começar uma nova rodada de 55 leituras
+            time.sleep(600) # Esperar 10 minutos antes de começar uma nova rodada de 55 leituras
             arduino = serial.Serial(port = arduino_port, baudrate = 9600)
 
 
